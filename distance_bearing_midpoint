@@ -1,0 +1,483 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#------------------------------------------------------------------------------
+__author__ = 'Paula Casrvalho de Castro'
+__contact__ = 'carvalhp@uni.edu'
+
+"""
+Name:           
+Compatibility:  Python 3.7
+Description:    Calculating distance on earth
+
+Requires:       math, sys
+
+Dev ToDo:       
+
+AUTHOR:         Paula Castro
+ORGANIZATION:   University of Northern Iowa
+
+"""
+
+""""
+1 - This program will calculate the distance between two locations on Earth given their coordinates. 
+2 - In order to do this, the program will assume that the Earth is spherical and not elliptical. 
+3 - The "haversine" formula will be used to calculate the distance over the surface of the earth between the given two pairs of coordinates. 
+4 - The two pairs of coordinates should be entered by the user in Latitude and Longitude formats. 
+5 - Latitude and Longitude formats should be:
+    Decimal degrees without compass direction. 
+    With negative indicating west/south: e.g. 33.7655, -72.8365
+6 - The program will check if the input coordinates are valid and if they are the correct type
+7 - The  haversine formula calculates the distance between the two points on the earth 
+    by multiplying the mean radius of the earth by the angular distance of the points in radians. 
+8 - Being: Distance = R x C
+9 - Mean radius of the earth (R) = 6,371.0088 km
+10- Angular distance in radians (C) = 2 ⋅ atan2( √a, √(1−a) )
+11- Being a (the square of half the chord length between the points) = sin²(Δφ/2) + cos φ1 ⋅ cos φ2 ⋅ sin²(Δλ/2)
+12- Where: φ is latitude, λ is longitude, Δφ is Lat2-Lat1 and Δλ is Long2-Long1
+
+This way:
+a = sin²(Δφ/2) + cos φ1 ⋅ cos φ2 ⋅ sin²(Δλ/2)
+c = 2 ⋅ atan2( √a, √(1−a) )
+D = R ⋅ c
+
+
+
+13- The output of the program is:
+    a) the distance between the two points in meters (no decimals), kilometers (2 decimals) and miles (2 decimals). 
+    b) the initial and final bearings (on the extra credit section)
+    c) the midpoint coordinates between the two locations (extra credit section)
+"""
+#%%
+#Inporting the libraries that are going to be used in the program.
+#Math is used to do trigonometrical calculations
+#Sys is used to "break" the program in case an invalid value is entered by the user
+
+import math
+import sys
+
+print ("This program will calculate the distance between two points in the \
+       surface of the Earth given their coordinates in deceimal degrees. \
+       Using the 'haversine' formula and assuming that the Earth is a sphere, \
+       the program calculates and returns the distance in meters, kilometers and miles")
+
+
+
+#Setting Earth's radius value as a variable (r) in meters
+#The mean radius of the Earth is 6371008.8 meters
+
+r = 6371008.8
+
+#Asking the user to input decimal coordinates of the two locations on Earth
+
+#Using the input function to ask the user to input values
+
+
+lat1 = (input("Please, enter the first latitude (y) value: "))
+
+
+#Using try/except to end the program in case an input value is not acceptable * \ If the value entered by the user is not an intenger or a float
+#and therefore not convertable to a float type value
+#the program will terminate because it only works with float values 
+
+#Repeat the same procedure for all input operations
+
+try:
+    lat1 = float(lat1)
+except ValueError:
+    print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(lat1))
+    sys.exit()
+
+    
+long1 = input("Please, enter the first longitude (x) value: ")
+
+try:
+    long1 = float(long1)
+except ValueError:
+    print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(long1))
+    sys.exit()
+
+lat2 = input("lPlease, enter the second latitude (y) value: ")
+try:
+    lat2 = float(lat2)
+except ValueError:
+    print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(lat2))
+    sys.exit()
+
+long2 = input("Please, enter the second longitude (x) value: ")
+try:
+    long2 = float(long2)
+except ValueError:
+    print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(long2))
+    sys.exit()
+
+#Making a list of latitudes and a list of longitudes 
+#so that conditional statements can run for all entered values
+#respecting the rules that exist for latitude and longitude 
+#latitude values vary between 0 and 90 degrees
+#longitude values vary between 0 and 180 degrees
+
+coords_lat = [lat1,lat2]
+coords_long = [long1, long2]
+
+#Setting a 'for' loop to go through the coordinates lists 
+#and use a conditional stament to check if they are valid values 
+#if values are not value e.g. a latitude being a value higher than 90
+#exit the program usisng a sys function 
+
+for i in coords_lat:
+    if abs(i) > 0 and abs(i) < 90:
+        print ("Input latitude is ok")
+    else:
+        print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(i))
+        sys.exit()
+
+for j in coords_long:
+    if abs(j) > 0 and abs(j) < 180:
+        print ("Input longitute is ok")
+    else:
+        print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(j))
+        sys.exit()
+
+#After checking if the input values for coordinates are valid and 
+#respect the conditions of latitude and longitude
+#set the haversine formula to calculate the distance between the 
+#2 points on the surfice of the earth
+
+
+        
+#Converting the coordinate values to radians to perform calculations
+
+phi_1 = math.radians(lat1)
+phi_2 = math.radians(lat2)
+lambda_1 = math.radians(long1)
+lambda_2 = math.radians(long2)
+
+#Starting to calculate the distance using the haversine formula
+
+delta_phi = phi_2 - phi_1
+delta_lambda = lambda_2 - lambda_1
+
+a = math.sin(delta_phi / 2.0) ** 2 + math.cos(phi_1) * math.cos(phi_2) * math.sin(delta_lambda / 2.0) **2
+
+#Printing the value of 'a'using a formated print statement
+print ("The value of 'a'is: {}".format(a))
+
+#Printing the value of 'c'using a formated print statement
+c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+print ("The value of 'c'is: {}".format(c))
+
+#Getting the results in meters and converting to kilometers and miles
+
+dist_meters = r * c
+dist_km = dist_meters /1000
+dist_miles = dist_km / 1.6
+
+print ("the distance between the locations is: \
+       %i meters \
+       the distance in kilometers is %.2f kilometers \
+       and the distance in miles %.2f miles"%(dist_meters, dist_km, dist_miles))
+
+#%%
+################ EXTRA CREDIT ###################
+
+"""
+The program will now accept degree minutes seconds as format
+for entered coordinates. It will also calculate the intial and final bearings
+and will also calculate the midpoint coordinates.
+
+"""
+
+import math
+import sys
+
+print ("This program will calculate the distance between two points in the \
+       surface of the Earth given their coordinates in deceimal degrees. \
+       or in degrees minutes seconds. Using the 'haversine' formula and assuming \
+       that the Earth is a sphere, \
+       the program calculates and returns the distance in meters, kilometers and miles")
+
+
+
+#Setting Earth's radius value as a variable (r) in meters
+#The mean radius of the Earth is 6371008.8 meters
+
+r = 6371008.8
+
+#Asking the user to input decimal coordinates of the two locations on Earth
+
+#Using the input function to ask the user to input values
+
+coord_type = input ("Hi, would you like to input your coordinates in decimal degrees \
+                    or in degrees minutes seconds format? \
+       To decimal degrees enter 'dd' , to do it in degrees minute seconds enter 'dms'': ")
+if coord_type == "dd":
+    print ("ok, you selected decimal degrees")
+    lat1 = (input("Please, enter the first latitude value: "))
+    long1 = input("Please, enter the first longitude value: ")
+    lat2 = input("lPlease, enter the second latitude value:: ")
+    long2 = input("Please, enter the second longitude value: ")
+    
+elif coord_type == "dms":
+    print ("ok, you selected degrees minutes seconds! For locations on southern or western hemisphere please use negative values for degrees")    
+    
+    lat1_deg = input("Please, enter the first latitude degree value: ")
+        
+    try:
+        lat1_deg = float(lat1_deg)
+    except ValueError:
+        print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(lat1_deg))
+        sys.exit()
+    
+    lat1_min = input("Please, enter the first latitude minutes value: ")
+  
+    try:
+        lat1_min = float(lat1_min)
+    except ValueError:
+        print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(lat1_min))
+        sys.exit()
+    
+    lat1_sec = input("Please, enter the first latitude seconds value: ")
+    try:
+        lat1_sec = float(lat1_sec)
+    except ValueError:
+        print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(lat1_sec))
+        sys.exit()
+    lat2_deg = input("Please, enter the second latitude degress value: ")
+    try:
+        lat2_deg = float(lat2_deg)
+    except ValueError:
+        print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(lat2_deg))
+        sys.exit()
+    lat2_min = input("Please, enter the second latitude minutes value: ")
+    try:
+        lat2_min = float(lat2_min)
+    except ValueError:
+        print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(lat2_min))
+        sys.exit()
+    
+    lat2_sec = input("Please, enter the second latitude second value: ")
+    try:
+        lat2_sec = float(lat2_sec)
+    except ValueError:
+        print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(lat2_sec))
+        sys.exit()
+    
+    long1_deg = input("Please, enter the first longitude degree value: ")
+    try:
+        long1_deg = float(long1_deg)
+    except ValueError:
+        print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(long1_deg))
+        sys.exit()
+    
+    long1_min = input("Please, enter the first longitude minutes value: ")
+    try:
+        long1_min = float(long1_min)
+    except ValueError:
+        print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(long1_deg))
+        sys.exit()   
+    
+    long1_sec = input("Please, enter the first longitude seconds value: ")
+    try:
+        long1_sec = float(long1_sec)
+    except ValueError:
+        print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(long1_sec))
+        sys.exit()   
+    
+    long2_deg = input("Please, enter the second longitude degress value: ")
+    try:
+        long2_deg = float(long2_deg)
+    except ValueError:
+        print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(long2_deg))
+        sys.exit() 
+    
+    long2_min = input("Please, enter the second longitude minutes value: ")
+    try:
+        long2_min = float(long2_min)
+    except ValueError:
+        print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(long2_min))
+        sys.exit()   
+    
+    long2_sec = input("Please, enter the second longitude second value: ")
+    try:
+        long2_sec = float(long2_sec)
+    except ValueError:
+        print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(long2_sec))
+        sys.exit()     
+    
+    lat1 = lat1_deg + lat1_min/60 + lat1_sec/3600
+    lat2 = lat2_deg + lat2_min/60 + lat2_sec/3600
+    long1 = long1_deg + long1_min/60 + long1_sec/3600
+    long2 = long2_deg + long2_min/60 + long2_sec/3600
+    
+    
+    
+    print ("ok")
+else: 
+    sys.exit()
+
+
+#Using try/except to end the program in case an input value is not acceptable * \ If the value entered by the user is not an intenger or a float
+#and therefore not convertable to a float type value
+#the program will terminate because it only works with float values 
+
+#Repeat the same procedure for all input operations
+
+try:
+    lat1 = float(lat1)
+except ValueError:
+    print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(lat1))
+    sys.exit()
+
+    
+
+
+try:
+    long1 = float(long1)
+except ValueError:
+    print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(long1))
+    sys.exit()
+
+
+try:
+    lat2 = float(lat2)
+except ValueError:
+    print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(lat2))
+    sys.exit()
+
+try:
+    long2 = float(long2)
+except ValueError:
+    print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(long2))
+    sys.exit()
+
+#Making a list of latitudes and a list of longitudes 
+#so that conditional statements can run for all entered values
+#respecting the rules that exist for latitude and longitude 
+#latitude values vary between 0 and 90 degrees
+#longitude values vary between 0 and 180 degrees
+
+coords_lat = [lat1,lat2]
+coords_long = [long1, long2]
+
+#Setting a 'for' loop to go through the coordinates lists 
+#and use a conditional stament to check if they are valid values 
+#if values are not value e.g. a latitude being a value higher than 90
+#exit the program usisng a sys function 
+
+for i in coords_lat:
+    if abs(i) > 0 and abs(i) < 90:
+        print ("Input latitude is ok")
+    else:
+        print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(i))
+        sys.exit()
+
+for j in coords_long:
+    if abs(j) > 0 and abs(j) < 180:
+        print ("Input longitute is ok")
+    else:
+        print ("Error: You have entered an invalid value: {} \
+           please restart the program".format(j))
+        sys.exit()
+
+#After checking if the input values for coordinates are valid and 
+#respect the conditions of latitude and longitude
+#set the haversine formula to calculate the distance between the 
+#2 points on the surfice of the earth
+
+
+        
+#Converting the coordinate values to radians to perform calculations
+
+phi_1 = math.radians(lat1)
+phi_2 = math.radians(lat2)
+lambda_1 = math.radians(long1)
+lambda_2 = math.radians(long2)
+
+#Starting to calculate the distance using the haversine formula
+
+delta_phi = phi_2 - phi_1
+delta_lambda = lambda_2 - lambda_1
+
+a = math.sin(delta_phi / 2.0) ** 2 + math.cos(phi_1) * math.cos(phi_2) * math.sin(delta_lambda / 2.0) **2
+
+#Printing the value of 'a'using a formated print statement
+print ("The value of 'a'is: {}".format(a))
+
+#Printing the value of 'c'using a formated print statement
+c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+print ("The value of 'c'is: {}".format(c))
+
+#Getting the results in meters and converting to kilometers and miles
+
+dist_meters = r * c
+dist_km = dist_meters /1000
+dist_miles = dist_km / 1.6
+
+print ("the distance between the locations is: \
+       %i meters \
+       the distance in kilometers is %.2f kilometers \
+       and the distance in miles %.2f miles"%(dist_meters, dist_km, dist_miles))
+
+#Calculating initial and final bearing acording to the formula:
+
+"""
+θ = atan2( sin Δλ ⋅ cos φ2 , cos φ1 ⋅ sin φ2 − sin φ1 ⋅ cos φ2 ⋅ cos Δλ )
+
+"""
+
+i_bearing = math.atan2(math.sin(delta_lambda) * math.cos(phi_2), math.cos(phi_1) * math.sin(phi_2) - math.sin(phi_1) * math.cos(phi_2) * math.cos(delta_lambda))
+i_bearing = math.degrees(i_bearing)
+i_bearing = (i_bearing + 360) % 360
+print ("The initial bearing is: {}".format(i_bearing))
+
+#Inverting the coordinates to get the final bearing
+
+delta_lambda_in = lambda_1-lambda_2
+
+
+f_bearing = math.atan2(math.sin(delta_lambda_in) * math.cos(phi_1), math.cos(phi_2) * math.sin(phi_1) - math.sin(phi_2) * math.cos(phi_1) * math.cos(delta_lambda_in))
+f_bearing = math.degrees(f_bearing)
+f_bearing = (f_bearing + 180) % 360
+print ("the final bearing is {}".format(f_bearing))
+
+#Calculating the midpoint acording to the formula below:
+
+"""
+Bx = cos φ2 ⋅ cos Δλ
+By = cos φ2 ⋅ sin Δλ
+φm = atan2( sin φ1 + sin φ2, √(cos φ1 + Bx)² + By² )
+λm = λ1 + atan2(By, cos(φ1)+Bx)
+
+"""
+bx = math.cos(phi_2) * math.cos(delta_lambda)
+by = math.cos(phi_2) * math.sin(delta_lambda)
+
+
+phi_m = math.atan2(math.sin(phi_1) + math.sin(phi_2), math.sqrt((math.cos(phi_1) + bx )**2 + by **2))
+lambda_m = lambda_1 + math.atan2(by,math.cos(phi_1)+bx)
+phi_m = math.degrees(phi_m)
+lambda_m = math.degrees(lambda_m)
+print ("the midpoint between the 2 points is {} degrees of latitude,{} degrees of longitude".format(phi_m,lambda_m))
