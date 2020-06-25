@@ -8,7 +8,7 @@ import ogr
 import pandas as pd
 
 #Getting the shapefile
-datasource = ogr.Open('/Users/paulacastro/Desktop/geopy/shapes/ne_50m_admin_0_countries.shp')
+datasource = ogr.Open('.../countries.shp')
 layer = datasource.GetLayerByIndex(0)
 
 #Visualizing the number of features in it
